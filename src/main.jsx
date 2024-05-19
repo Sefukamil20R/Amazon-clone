@@ -14,5 +14,6 @@ root.render(
 
   </React.StrictMode>
 );
+// main part of amazon
 
 
