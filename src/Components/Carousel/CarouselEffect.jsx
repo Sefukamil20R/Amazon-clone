@@ -7,6 +7,7 @@ function CarouselEffect() {
 	return (
 		<div>
 			<Carousel
+			// attributes
 				autoPlay={true}
 				infiniteLoop={true}
 				showIndicators={false}
