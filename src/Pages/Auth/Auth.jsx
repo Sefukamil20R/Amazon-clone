@@ -1,6 +1,11 @@
 import React, { useState, useContext } from "react";
 import classes from "./SignUp.module.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+// import { auth } from "../../Utility/firebase";
+// import {
+//   signInWithEmailAndPassword,
+//   createUserWithEmailAndPassword,
+// } from "firebase/auth";
 import { ClipLoader } from "react-spinners";
 import { DataContext } from "../../Components/DataProvider/DataProvider";
 import { Type } from "../../Utility/action.type";
@@ -19,17 +24,46 @@ function Auth() {
   const navStateData = useLocation();
   console.log(navStateData);
 
+  // console.log(user);
+
   const authHandler = async (e) => {
     e.preventDefault();
     console.log(e.target.name);
-    if (e.target.name === "signin") {
-      // Perform authentication logic without Firebase
-      // Update user state and navigate accordingly
+    if (e.target.name == "signin") {
+      // firebase auth
+      setLoading({ ...loading, signIn: true });
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userInfo) => {
+          dispatch({
+            type: Type.SET_USER,
+            user: userInfo.user,
+          });
+          setLoading({ ...loading, signIn: false });
+          navigate(navStateData?.state?.redirect || "/");
+        })
+        .catch((err) => {
+          setError(err.message);
+          setLoading({ ...loading, signIn: false });
+        });
     } else {
-      // Perform registration logic without Firebase
-      // Update user state and navigate accordingly
+      setLoading({ ...loading, signUP: true });
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userInfo) => {
+          dispatch({
+            type: Type.SET_USER,
+            user: userInfo.user,
+          });
+          setLoading({ ...loading, signUP: false });
+          navigate(navStateData?.state?.redirect || "/");
+        })
+        .catch((err) => {
+          setError(err.message);
+          setLoading({ ...loading, signUP: false });
+        });
     }
   };
+
+  // console.log(password, email);
 
   return (
     <section className={classes.login}>
