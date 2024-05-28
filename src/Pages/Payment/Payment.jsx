@@ -7,6 +7,7 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import CurrencyFormat from "../../Components/CurrencyFormat/CurrencyFormat";
 import { axiosInstance } from "../../Api/axios";
 import { ClipLoader } from "react-spinners";
+import { db } from "../../Utility/firebase";
 import { useNavigate } from "react-router-dom";
 import { Type } from "../../Utility/action.type";
 
@@ -30,6 +31,7 @@ function Payment() {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    // console.log(e);
     e?.error?.message ? setCardError(e?.error?.message) : setCardError("");
   };
 
@@ -38,13 +40,13 @@ function Payment() {
 
     try {
       setProcessing(true);
-
       // 1. backend || functions ---> contact to the client secret
       const response = await axiosInstance({
         method: "POST",
         url: `/payment/create?total=${total * 100}`,
       });
 
+      // console.log(response.data);
       const clientSecret = response.data?.clientSecret;
 
       // 2. client side (react side confirmation)
@@ -54,14 +56,24 @@ function Payment() {
         },
       });
 
-      // 3. Handle the payment confirmation
-      // Note: This part is removed as it's related to Firestore database logic
+      // console.log(paymentIntent);
 
-      // Empty the basket
+      // 3. after the confirmation --> order firestore database save, clear basket
+      await db
+        .collection("users")
+        .doc(user.uid)
+        .collection("orders")
+        .doc(paymentIntent.id)
+        .set({
+          basket: basket,
+          amount: paymentIntent.amount,
+          created: paymentIntent.created,
+        });
+      // empty the basket
       dispatch({ type: Type.EMPTY_BASKET });
 
       setProcessing(false);
-      navigate("/orders", { state: { msg: "you have placed a new Order" } });
+      navigate("/orders", { state: { msg: "you have placed new Order" } });
     } catch (error) {
       console.log(error);
       setProcessing(false);

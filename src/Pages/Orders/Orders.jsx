@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import LayOut from "../../Components/LayOut/LayOut";
 import classes from "./Orders.module.css";
+import { db } from "../../Utility/firebase";
 import { DataContext } from "../../Components/DataProvider/DataProvider";
 import ProductCard from "../../Components/Product/ProductCard";
 
@@ -9,36 +10,32 @@ function Orders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    // Replace this with your own logic or remove it if not needed
-    // Sample data for demonstration purposes
-    const sampleOrders = [
-      {
-        id: "order1",
-        data: {
-          created: new Date(),
-          basket: [
-            { id: "product1", name: "Product 1", price: 10 },
-            { id: "product2", name: "Product 2", price: 15 },
-          ],
-        },
-      },
-      // Add more sample orders as needed
-    ];
-
     if (user) {
-      setOrders(sampleOrders);
+      db.collection("users")
+        .doc(user.uid)
+        .collection("orders")
+        .orderBy("created", "desc")
+        .onSnapshot((snapshot) => {
+          console.log(snapshot);
+          setOrders(
+            snapshot.docs.map((doc) => ({
+              id: doc.id,
+              data: doc.data(),
+            }))
+          );
+        });
     } else {
       setOrders([]);
     }
-  }, [user]);
+  }, []);
 
   return (
     <LayOut>
       <section className={classes.container}>
         <div className={classes.orders__container}>
           <h2>Your Orders</h2>
-          {orders?.length === 0 && (
-            <div style={{ padding: "20px" }}>You don't have orders yet.</div>
+          {orders?.length == 0 && (
+            <div style={{ padding: "20px" }}>you don't have orders yet.</div>
           )}
           {/* ordered items */}
           <div>
