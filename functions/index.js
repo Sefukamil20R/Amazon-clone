@@ -4,15 +4,16 @@ const logger = require("firebase-functions/logger");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const { setGlobalOptions } = require("firebase-functions/v2");
+// const { setGlobalOptions } = require("firebase-functions/v2");
 dotenv.config();
 const stripe = require("stripe")(
-    process.env.STRIPE_SECRET_KEY
+    "sk_test_51PL1wLRpW5uwDL2GQQdUK9rgMMUPUdd7YCM3gYnP6412QZIEqVyhcjEIT6xkSadIJJ04L8mkmOIUrJrr2DxbKq4l00qIdmnQNm"
+    
 );
 const app = express();
 
-setGlobalOptions({ maxInstances: 10 });
-app.use(cors({ orign: true }));
+// setGlobalOptions({ maxInstances: 10 });
+app.use(cors({ origin: true }));
 app.use(express.json());
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -33,7 +34,7 @@ app.post("/payment/create", async (req, res) => {
     currency: "usd",
   });
 
-  console.log(paymentIntent);
+  // console.log(paymentIntent);
 
   res.status(200).json({
     message: "Payment intent created successfully",
