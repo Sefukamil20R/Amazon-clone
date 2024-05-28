@@ -27,15 +27,10 @@
   color: rgb(9, 132, 209);
 }
 .category__container {
-  position: relative;
-  margin-top: -10%;
-  display: grid;
-grid-template-columns: repeat(4, 1fr);
- place-items: center;
- /* grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
- max-width: 1600px;
- gap: 50px;
- margin-right: auto;
- margin-left: auto;
- */
-}
+position: relative;
+margin-top: -10%;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 5px; 
+max-width: 1600px;
+place-items: center;}

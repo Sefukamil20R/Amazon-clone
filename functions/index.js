@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 // const { setGlobalOptions } = require("firebase-functions/v2");
 dotenv.config();
 const stripe = require("stripe")(
-    "sk_test_51PL1wLRpW5uwDL2GQQdUK9rgMMUPUdd7YCM3gYnP6412QZIEqVyhcjEIT6xkSadIJJ04L8mkmOIUrJrr2DxbKq4l00qIdmnQNm"
+  "sk_test_51PL1wLRpW5uwDL2GQQdUK9rgMMUPUdd7YCM3gYnP6412QZIEqVyhcjEIT6xkSadIJJ04L8mkmOIUrJrr2DxbKq4l00qIdmnQNm"
     
 );
 const app = express();
